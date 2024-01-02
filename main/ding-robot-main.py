@@ -4,11 +4,15 @@
 # @Author  : 刘航宇
 # @File    : ding-robot-main.py
 # @Description :
+import logging
+
 import dingtalk_stream
 from dingtalk_stream import AckMessage
 
 from dingding.disposeHelpDocs import DisposeHelpDocs
 from utils.getConfig import global_config
+
+from dingding.packMessage import PackMessage
 
 
 class AllEventHandler(dingtalk_stream.EventHandler):
@@ -46,11 +50,9 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
         message = incoming_message.text.content.strip()
 
         # 处理逻辑
-        if message == '':
-            self.reply_text(DisposeHelpDocs("").getDocs(), incoming_message)
-
-        elif "帮助" in message:
-            self.reply_text(DisposeHelpDocs(message).getDocs(), incoming_message)
+        if message == '' or "帮助" in message:
+            return_message = DisposeHelpDocs(message).getDocs()
+            self.reply_text(PackMessage().packText(return_message), incoming_message)
 
         elif "交互" in message:
             pass
@@ -73,5 +75,5 @@ if __name__ == '__main__':
     # 监听消息事件
     client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, CallBackHandler())
     # 启动监听
-    print("启动监听")
+    logging.info("项目启动入口，创建钉钉监听实例，启动监听")
     client.start_forever()

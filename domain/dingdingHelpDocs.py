@@ -11,6 +11,9 @@ from utils.mysqlUtil import db
 
 
 class DingDingHelpDocs(Model):
+    """
+    下述的实体与数据库字段完全一致
+    """
     doc_id = CharField(primary_key=True)
     doc_name = CharField(null=False)
     doc_type = CharField(null=False)

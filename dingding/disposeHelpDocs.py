@@ -6,65 +6,60 @@
 # @Description : 关于处理消息帮助菜单
 
 from domain.dingdingHelpDocs import DingDingHelpDocs
+from utils.logUtil import logging
 
 
 class DisposeHelpDocs:
     def __init__(self, message):
         self.message: str = message
-        self.text: str = ""
-        self.doc_type: 0
-        self.error = 0
-        self.result = ""
 
-        # 查询全部记录
-        if self.message == "" or "帮助文档" in self.message:
-            records = DingDingHelpDocs.select().where(DingDingHelpDocs.doc_type != 3).order_by(
+    def getDocs(self) -> str:
+        """
+        获取帮助文档的内容
+        :return:
+        """
+        tab_size = 0
+        records = []
+        # 如果为空则直接返回全部帮助文档
+        if self.message == "" or self.message == "帮助文档":
+            records = DingDingHelpDocs.select().where(DingDingHelpDocs.doc_type != 3,
+                                                      DingDingHelpDocs.state == 1).order_by(
                 DingDingHelpDocs.work_type)
-            self.disposeDocs(records, 0)
-        # 根据命令名字匹配记录
+            tab_size = 0
+        # 返回具体命令的帮助文档
         else:
-            # 首先判断命令是否存在于数据库中
+            # 判断输入的命令参数是否合法，如果不合法直接返回
             try:
-                record = DingDingHelpDocs.get(DingDingHelpDocs.doc_name == self.getDocName())
+                doc_name = self.message.split(" ")[1]
             except Exception as e:
-                self.error = 1
-                self.result = "命令错误"
-                return
-            # 判断命令是一级命令或者二级命令
+                logging.warning(f"接收的命令或者参数不合法")
+                return "命令或者参数不合符规范"
+
+            # 判断输入的命令是否在数据库中存在
+            try:
+                record = DingDingHelpDocs.get(DingDingHelpDocs.doc_name == doc_name)
+            except Exception as e:
+                logging.warning(f"命令不存在")
+                return "命令不存在"
+
+            # 根据命令的类型返回消息
             if record.doc_type == "1":
                 records = DingDingHelpDocs.select().where(
-                    DingDingHelpDocs.work_type == record.work_type, DingDingHelpDocs.doc_type != 3)
-                self.disposeDocs(records, 1)
+                    DingDingHelpDocs.work_type == record.work_type, DingDingHelpDocs.doc_type != 3,
+                    DingDingHelpDocs.state == 1)
+                tab_size = 1
 
             elif record.doc_type == "2":
-                records = DingDingHelpDocs.select().where(DingDingHelpDocs.doc_name == self.getDocName() + "详情")
-                text = ""
-                for record in records:
-                    text = text + record.doc_comment + "\n"
-                self.text = text
-
-        # 根据记录名字查询
-        # print(record.doc_id)
-
-    def getDocName(self):
-        """
-        获取名字l文档名字
-        :return: 命令名字
-        """
-        doc_name = self.message.split(" ")[1]
-        return doc_name
-
-    def getDocs(self):
-        return self.text
-
-    def disposeDocs(self, records, tab):
-        text = ""
+                records = DingDingHelpDocs.select().where(DingDingHelpDocs.doc_name == doc_name + "详情",
+                                                          DingDingHelpDocs.state == 1)
+                tab_size = 3
+        doc_text = ""
         for record in records:
-            text = text + " " * (int(record.doc_type) - tab) + record.doc_comment + "\n"
-        self.text = text
+            doc_text = doc_text + " " * (int(record.doc_type) - tab_size) + record.doc_comment + "\n"
+        return doc_text
 
 
 if __name__ == '__main__':
-    print(DisposeHelpDocs("").getDocs())
+    print(DisposeHelpDocs("帮助文档").getDocs())
     print(DisposeHelpDocs("帮助 账户管理").getDocs())
     print(DisposeHelpDocs("帮助 创建账户").getDocs())
