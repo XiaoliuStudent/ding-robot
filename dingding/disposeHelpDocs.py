@@ -14,7 +14,7 @@ class DisposeHelpDocs:
         self.text: str = ""
         self.doc_type: 0
         self.error = 0
-        self.result = "aasddda"
+        self.result = "aasdssdda"
 
         # 查询全部记录
         if self.message == "" or "帮助文档" in self.message:
