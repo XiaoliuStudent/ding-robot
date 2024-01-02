@@ -6,6 +6,8 @@
 # @Description :
 import dingtalk_stream
 from dingtalk_stream import AckMessage
+
+from dingding.disposeHelpDocs import DisposeHelpDocs
 from utils.getConfig import global_config
 
 
@@ -42,8 +44,20 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
         incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
         # 拿到消息正文
         message = incoming_message.text.content.strip()
+
+        # 处理逻辑
+        if message == '':
+            self.reply_text(DisposeHelpDocs("").getDocs(), incoming_message)
+
+        elif "帮助" in message:
+            self.reply_text(DisposeHelpDocs(message).getDocs(), incoming_message)
+
+        elif "交互" in message:
+            pass
+        else:
+            pass
+
         # 回复消息
-        self.reply_text("this is test ok", incoming_message)
         return AckMessage.STATUS_OK, 'OK'
 
 

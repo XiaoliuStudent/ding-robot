@@ -7,7 +7,7 @@
 # 用于mysql数据库的链接，并创建连接池和实例
 
 from playhouse.pool import PooledMySQLDatabase
-from getConfig import global_config
+from utils.getConfig import global_config
 
 db = PooledMySQLDatabase(database=global_config['mysql']['database'],
                          user=global_config['mysql']['username'],
