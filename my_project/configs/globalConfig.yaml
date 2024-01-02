@@ -1,0 +1,15 @@
+dev:
+  mysql:
+    host: "doisnot.com"
+    port: "3306"
+    username: "root"
+    password: "nihaonihao000..."
+    database: "ding-robot"
+  redis:
+    host: "doisnot.com"
+    password: "nihaonihao000..."
+  dingding:
+    client_id: "dingzhhaiuviurkjlqmx"
+    client_secret: "EGJ43Fidnln7paWAeHfPRUAnwQCaaW6VhLBy0GVIwIH7bpK851lLi2WWGOchrvpG"
+
+production:
