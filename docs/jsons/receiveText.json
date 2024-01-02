@@ -1,0 +1,28 @@
+{
+   "senderPlatform":"Win",
+   "conversationId":"cidpVZDrUkklLmwfu4OeE7GEg==",
+   "atUsers":[
+      {
+         "dingtalkId":"$:LWCP_v1:$QpqMrfZFgi0QpCD0Y5b/f7AQnKyDhkj1"
+      }
+   ],
+   "chatbotCorpId":"dingf65142bea371fcb8a1320dcb25e91351",
+   "chatbotUserId":"$:LWCP_v1:$QpqMrfZFgi0QpCD0Y5b/f7AQnKyDhkj1",
+   "msgId":"msge0PveE0qndr8YwSV8aXfjA==",
+   "senderNick":"刘航宇",
+   "isAdmin":true,
+   "senderStaffId":"01181261605121252789",
+   "sessionWebhookExpiredTime":1704173374418,
+   "createAt":1704167974137,
+   "senderCorpId":"dingf65142bea371fcb8a1320dcb25e91351",
+   "conversationType":"2",
+   "senderId":"$:LWCP_v1:$t0GtZweH5wdeYXASXCWoaxqINRCUKRBF",
+   "conversationTitle":"运小维-测试群",
+   "isInAtList":true,
+   "sessionWebhook":"https://oapi.dingtalk.com/robot/sendBySession?session=99f4f61ad005aa58da7396b6c97f5f67",
+   "text":{
+      "content":" 你好"
+   },
+   "robotCode":"dingzhhaiuviurkjlqmx",
+   "msgtype":"text"
+}

@@ -7,6 +7,7 @@
 import os
 import yaml
 
+
 # 定义全局配置变量和读取参数配置文件
 global_config = {}
 with open('../configs/globalConfig.yaml', 'r') as file:
