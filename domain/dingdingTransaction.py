@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2024-01-03 17:44
 # @Author  : 刘航宇
-# @File    : transcation.py
+# @File    : dingdingTransaction.py
 # @Description : 处理事务逻辑
 import datetime
 

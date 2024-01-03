@@ -11,7 +11,7 @@ from dingtalk_stream import AckMessage
 
 from dingding.disposeMessageDocs import DisposeMessageDocs
 from utils.getConfig import global_config
-from domain.transcation import Transaction
+from domain.dingdingTransaction import Transaction
 
 from dingding.packMessage import *
 
@@ -49,6 +49,7 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
         incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
         # 拿到消息正文
         message = incoming_message.text.content.strip()
+        logging.info("获取到消息" + message.replace("\n",","))
 
         # 处理交互逻辑，根据拿到的消息判断其中是否有命令
         disposeMessageDocs = DisposeMessageDocs()
@@ -60,6 +61,8 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
             trans_id = Transaction().makeId()
             # 经过OA审批，完成，推送
             return_message = return_message + "\n下一步，即将生成OA，这是你的事务ID：\n事务ID：" + trans_id
+
+            logging.info(f"获取事务成功，将要提交OA，事务ID为：{trans_id}")
 
         # 回复消息
         self.reply_text(return_message, incoming_message)

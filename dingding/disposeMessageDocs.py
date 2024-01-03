@@ -7,10 +7,12 @@
 
 from domain.dingdingHelpDocs import DingDingHelpDocs
 
+
 class DisposeMessageDocs:
     """
     用于处理消息，判断消息命令是绝对命令或者模糊查询
     """
+
     def __init__(self):
         self.message_type = ""
 
@@ -50,6 +52,7 @@ class DisposeMessageDocs:
         for i in commands:
             self.message_type = "模糊命令"
             command_message = command_message + "- " + i.doc_name + "\n"
+
         return command_message
 
 

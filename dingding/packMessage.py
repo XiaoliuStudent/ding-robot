@@ -56,5 +56,13 @@ class packMarkdown:
         return md
 
 
+class packFile:
+    def __init__(self):
+        pass
+
+    def packDocFile(self):
+        pass
+
+
 if __name__ == '__main__':
     print(packMarkdown().packHelpDocs("nihao"))
