@@ -4,11 +4,12 @@
 # @Author  : 刘航宇
 # @File    : sendMessage.py
 # @Description : 关于处理发送消息
-class PackMessage:
+
+class packText:
     def __init__(self):
         pass
 
-    def packText(self, message_text) -> str:
+    def packHelpDocs(self, message_text):
         """
         包装消息函数
         :param message_text: 需要包装的消息
@@ -17,9 +18,43 @@ class PackMessage:
         message = message_text
         return message
 
-    def packMarkdown(self, message_text) -> str:
-        return ""
+
+class packMarkdown:
+    def __init__(self):
+        pass
+
+    def packHelpDocs(self, message_text) -> str:
+        md = """
+# 查询的结果如下
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+ 
+引用
+> A man who stands for nothing will fall for anything.
+ 
+文字加粗、斜体
+**bold**
+*italic*
+ 
+链接
+[this is a link](https://www.dingtalk.com/)
+ 
+图片
+![](http://name.com/pic.jpg)
+ 
+无序列表
+- item1
+- item2
+ 
+有序列表
+1. item1
+2. item2
+"""
+        return md
 
 
 if __name__ == '__main__':
-    print(PackMessage().packText("this is test message"))
+    print(packMarkdown().packHelpDocs("nihao"))

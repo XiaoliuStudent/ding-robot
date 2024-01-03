@@ -9,10 +9,11 @@ import logging
 import dingtalk_stream
 from dingtalk_stream import AckMessage
 
-from dingding.disposeHelpDocs import DisposeHelpDocs
+from dingding.disposeMessageDocs import DisposeMessageDocs
 from utils.getConfig import global_config
+from domain.transcation import Transaction
 
-from dingding.packMessage import PackMessage
+from dingding.packMessage import *
 
 
 class AllEventHandler(dingtalk_stream.EventHandler):
@@ -49,17 +50,19 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
         # 拿到消息正文
         message = incoming_message.text.content.strip()
 
-        # 处理逻辑
-        if message == '' or "帮助" in message:
-            return_message = DisposeHelpDocs(message).getDocs()
-            self.reply_text(PackMessage().packText(return_message), incoming_message)
+        # 处理交互逻辑，根据拿到的消息判断其中是否有命令
+        disposeMessageDocs = DisposeMessageDocs()
+        return_message = disposeMessageDocs.getDocs(message)
 
-        elif "交互" in message:
-            pass
-        else:
-            pass
+        # 如果收到的命令是绝对命令则进行下一环节，OA审批
+        if disposeMessageDocs.message_type == "携带参数的绝对命令":
+            # 获取事务ID
+            trans_id = Transaction().makeId()
+            # 经过OA审批，完成，推送
+            return_message = return_message + "\n下一步，即将生成OA，这是你的事务ID：\n事务ID：" + trans_id
 
         # 回复消息
+        self.reply_text(return_message, incoming_message)
         return AckMessage.STATUS_OK, 'OK'
 
 
