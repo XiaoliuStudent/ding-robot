@@ -23,7 +23,7 @@ class DingDingSession(Model):
 
     class Meta:
         database = db
-        table_name = 'access_token'
+        table_name = 'access_tokens'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -73,17 +73,25 @@ class DingDingSession(Model):
         nihao = DingDingSession.update(app_token=self.app_token,
                                        expire_time=datetime.datetime.now() + datetime.timedelta(hours=2)).where(
             DingDingSession.app_key == self.app_key).execute()
+
+        # 结果判断
         if nihao != 1:
             logging.info("dingding token 更新到数据库成功")
         else:
             logging.info("dingding token 更新到数据库失败")
 
 
+# 创建全局唯一实例
 dingdingSession = DingDingSession()
+# 紧接更新token
+dingdingSession.setToken()
+access_token_json = {'access_token': dingdingSession.app_token}
+access_token = dingdingSession.app_token
 
 if __name__ == '__main__':
     v1 = DingDingSession()
     v1.setToken()
+    print(v1.app_token)
 
     # v1.setToken()
     # for i in v1.select():

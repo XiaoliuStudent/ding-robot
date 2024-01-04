@@ -5,6 +5,7 @@
 # @File    : ding-robot-main.py
 # @Description :
 import logging
+import os
 
 import dingtalk_stream
 from dingtalk_stream import AckMessage
@@ -12,8 +13,8 @@ from dingtalk_stream import AckMessage
 from dingding.disposeMessageDocs import DisposeMessageDocs
 from utils.getConfig import global_config
 from domain.dingdingTransaction import Transaction
-
 from dingding.packMessage import *
+from dingding.nextProcess import NextProcess
 
 
 class AllEventHandler(dingtalk_stream.EventHandler):
@@ -49,30 +50,44 @@ class CallBackHandler(dingtalk_stream.ChatbotHandler):
         incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
         # 拿到消息正文
         message = incoming_message.text.content.strip()
-        logging.info("获取到消息" + message.replace("\n",","))
+        logging.info("获取到消息" + message.replace("\n", ","))
 
         # 处理交互逻辑，根据拿到的消息判断其中是否有命令
         disposeMessageDocs = DisposeMessageDocs()
         return_message = disposeMessageDocs.getDocs(message)
 
         # 如果收到的命令是绝对命令则进行下一环节，OA审批
-        if disposeMessageDocs.message_type == "携带参数的绝对命令":
+        if disposeMessageDocs.message_type == "携带参数的绝对事务命令":
             # 获取事务ID
             trans_id = Transaction().makeId()
             # 经过OA审批，完成，推送
             return_message = return_message + "\n下一步，即将生成OA，这是你的事务ID：\n事务ID：" + trans_id
 
             logging.info(f"获取事务成功，将要提交OA，事务ID为：{trans_id}")
+            self.reply_text(return_message, incoming_message)
+        elif disposeMessageDocs.message_type == "绝对文档类命令":
+
+            nextProcess = NextProcess()
+            return_message = nextProcess.nextDocumentProcess(message)
+            logging.info(f"绝对文档类命令")
+        else:
+            self.reply_text(return_message, incoming_message)
 
         # 回复消息
-        self.reply_text(return_message, incoming_message)
+
         return AckMessage.STATUS_OK, 'OK'
+
+
+def configEnv():
+    if os.getenv('ding-robot-env') != "dev":
+        from domain.dingdingToken import DingDingSession
 
 
 if __name__ == '__main__':
     """
         项目启动入口，创建钉钉监听实例
     """
+    configEnv()
     credential = dingtalk_stream.Credential(global_config['dingding']['client_id'],
                                             global_config['dingding']['client_secret'])
     client = dingtalk_stream.DingTalkStreamClient(credential)
